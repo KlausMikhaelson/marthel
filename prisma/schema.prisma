@@ -12,12 +12,14 @@ model Game {
   id        String   @id @default(uuid())
   word      String
   guesses   String[]
-  status    String
+  status    GameStatus
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   entryFee  Int
   User      User?    @relation(fields: [userId], references: [id])
   userId    String?
+
+  @@index([userId])
 }
 
 model User {
@@ -28,4 +30,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   games     Game[]
+
+  @@index([email])
+}
+
+enum GameStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
 }

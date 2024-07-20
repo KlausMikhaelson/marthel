@@ -4,11 +4,20 @@ export const useEquationGame = (rows: number, cols: number) => {
   const [equations, setEquations] = useState<string[][]>(
     Array(rows).fill("").map(() => Array(cols).fill(""))
   );
+  const [won, setWon] = useState(false);
+  const [chosenNumber, setChosenNumber] = useState<number | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[][]>(
     Array(rows).fill(null).map(() => Array(cols).fill(null))
   );
   const [currentRow, setCurrentRow] = useState(0);
   const allowedCharacters = "0123456789+-*/";
+  const possibleResults = [100, 23, 194, 33];
+
+  useEffect(() => {
+    // Chooses a random number when the component mounts
+    const randomIndex = Math.floor(Math.random() * possibleResults.length);
+    setChosenNumber(possibleResults[randomIndex]);
+  }, []);
 
   const handleInputChange = ({ row, col, value }: { row: number; col: number; value: string }) => {
     if (!allowedCharacters.includes(value)) return;
@@ -56,15 +65,39 @@ export const useEquationGame = (rows: number, cols: number) => {
     handleInputChange({ row, col, value: char });
   };
 
+  const evaluateEquation = (equation: string): number => {
+    try {
+      // Using Function constructor to create a new function for evaluation
+      return new Function(`return ${equation}`)();
+    } catch {
+      return NaN;
+    }
+  };
+
   const handleSubmit = async () => {
     const equation = equations[currentRow].join("").trim();
+    if (!chosenNumber) {
+      alert("Chosen number is not set.");
+      return;
+    }
+
+    // Check if the equation evaluates to the chosen number
+    const result = evaluateEquation(equation);
+    if (result !== chosenNumber) {
+      alert("The result of the equation does not match the chosen number. Please make changes in the current row.");
+      return;
+    }
+
+    // Proceed with API request if the result matches
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("stringiFied", equation);
+    headers.append("chosenNumber", chosenNumber.toString());
+
     try {
       const response = await fetch("/api", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          stringiFied: equation,
-        },
+        headers: headers,
       });
       const result = await response.json();
 
@@ -73,14 +106,14 @@ export const useEquationGame = (rows: number, cols: number) => {
         currentInputs.forEach((input) => {
           if (input) input.style.backgroundColor = "green";
         });
-        alert("You won the game!");
+        setWon(true);
       } else {
         for (let i = 0; i < equation.length; i++) {
           const currentInput = inputRefs.current[currentRow][i];
           if (result.feedback[i] === "correct") {
-            if (currentInput) currentInput.style.backgroundColor = "green";
+            if (currentInput) currentInput.style.backgroundColor = "#4CAF50";
           } else if (result.feedback[i] === "wrong-position") {
-            if (currentInput) currentInput.style.backgroundColor = "orange";
+            if (currentInput) currentInput.style.backgroundColor = "#E2B53F";
           } else {
             if (currentInput) currentInput.style.backgroundColor = "red";
           }
@@ -116,5 +149,7 @@ export const useEquationGame = (rows: number, cols: number) => {
     handleKeyDown,
     handleButtonClick,
     handleSubmit,
+    won,
+    chosenNumber,
   };
 };

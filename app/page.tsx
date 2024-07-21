@@ -20,7 +20,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-black">
-      <h1 className="text-4xl font-bold mb-8 text-white font-serif">Marthel</h1>
+      <h1 className="text-4xl font-bold mb-8 text-white font-serif">Martha</h1>
       <div className="text-2xl text-white mb-4">
         Solve for: {chosenNumber}
       </div>
@@ -46,12 +46,12 @@ export default function Home() {
       </div>
       <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
         {"0123456789".split("").map((char) => (
-          <Button key={char} char={char} onClick={() => handleButtonClick(char)} color="bg-blue-500" />
+          <Button key={char} char={char} onClick={() => handleButtonClick(char)} color="bg-gray-900 shadow-lg" />
         ))}
       </div>
       <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
         {["+", "-", "*", "/"].map((char) => (
-          <Button key={char} char={char} onClick={() => handleButtonClick(char)} color="bg-yellow-500" />
+          <Button key={char} char={char} onClick={() => handleButtonClick(char)} color="bg-gray-700" />
         ))}
       </div>
       <Button char="Submit" onClick={handleSubmit} color="m-2 bg-green-500" />

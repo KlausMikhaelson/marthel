@@ -49,12 +49,8 @@ export const POST = async (req: Request, res: Response) => {
     }
   }
 
-  console.log(expectedEquationCopy, equation, "$$$$$$$");
-
   if (expectedEquationCopy.length === 0 && isEquationComplete(equation)) {
     const evaluatedResult = evaluateEquation(equation);
-    console.log(evaluatedResult, chosenNumber, "%%%%%%%%%%");
-    // Check if the evaluated result matches the chosen number
     if (evaluatedResult !== parseInt(chosenNumber, 10)) {
       correct = false;
     } else {

@@ -11,7 +11,7 @@ export const useEquationGame = (rows: number, cols: number) => {
   );
   const [currentRow, setCurrentRow] = useState(0);
   const allowedCharacters = "0123456789+-*/";
-  const possibleResults = [100, 23, 194, 33];
+  const possibleResults = [100, 23, 194, 33, 27];
 
   useEffect(() => {
     // Chooses a random number when the component mounts

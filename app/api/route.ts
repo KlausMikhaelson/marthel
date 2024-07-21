@@ -27,6 +27,7 @@ export const POST = async (req: Request, res: Response) => {
   };
 
   // Initialize feedback
+  // TODO: add type for feedback
   const feedback = [];
   let correct = true;
 

@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { Server, createServer } from 'http';
-import { POST } from '@/app/api/route'; // Adjust the path to your API handler
+import { POST } from '@/app/api/route';
 
 const createTestServer = (handler: any) => {
   return createServer((req, res) => {
